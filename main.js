@@ -242,14 +242,13 @@ hall.prototype = {
 function 
 vbelt(belt)
 {
-	this.draw(belt);
+	this.html = this.draw(belt);
 }
 
 vbelt.prototype = {
 	draw: function(belt) {
 		let _belt = document.createElement('div');
 		_belt.className = 'belt';
-		_belt.id = "b" + belt.id;
 
 		let belts = document.getElementById('belts');
 		let row = document.createElement('div');
@@ -258,7 +257,6 @@ vbelt.prototype = {
 		{
 			let cell = document.createElement('div');
 			cell.className = 'col';
-			cell.id = x;
 			if (belt.x[x] != null) {
 				let _vpkg = new vpkg(belt.x[x]);
 				if (x === 4) {
@@ -270,69 +268,65 @@ vbelt.prototype = {
 				cell.appendChild(_vpkg.html);
 			}
 			row.appendChild(cell);
-
 		}
 		_belt.appendChild(row);
 		belts.appendChild(_belt);
-	},
+		return _belt;
+	}
 }
 
 function
-vtruck(_truck, hall)
+vtruck(_truck)
 {
-	this.draw(_truck, hall);
+	this.html = this.draw(_truck);
 }
 
 vtruck.prototype = {
 
-	draw: function(itruck, hall){
+	draw: function(truck){
 	let parking = document.getElementById('parking');
 		let _truck = document.createElement('div');
 		_truck.className = 'truck';
-		for(let y = 0; y < itruck.y; y++)
+		for(let y = 0; y < truck.y; y++)
 		{
 			let row = document.createElement('div');
 			row.className = 'trow';
-			row.id = y;
-			for(let x = 0; x < itruck.x; x++)
+			for(let x = 0; x < truck.x; x++)
 			{
 				let cell = document.createElement('div');
 				cell.className = 'tcol';
-				if (itruck.array[y][x] != undefined){
-					let _vpkg = new vpkg(itruck.array[y][x]);
+				if (truck.array[y][x] != undefined){
+					let _vpkg = new vpkg(truck.array[y][x]);
 					cell.appendChild(_vpkg.html);
 				}
 				else
 					cell.style.backgroundColor = "black";
-				cell.id = x;
 				row.appendChild(cell);
 			}
 		_truck.appendChild(row);
 		}
 		let _truckinfo = document.createElement('div', "tinfo");
-		_truckinfo.textContent = "Type: " + itruck.type.toLowerCase() 
-			+ " | Color: " + Packages[itruck.type];
+		_truckinfo.textContent = "Type: " + truck.type.toLowerCase() 
+			+ " | Color: " + Packages[truck.type];
 		_truck.appendChild(_truckinfo);
 		let departBtn = createElement("button");
 		departBtn.textContent = "Depart";
+		_truck.appendChild(departBtn);
 
 		departBtn.addEventListener("click", function(event){
 			event.preventDefault();
-			_this.tryRemoveTruck(itruck);
+			_this.tryRemoveTruck(truck);
 		});
-
-		_truck.appendChild(departBtn);
-
 		_truck.addEventListener("dragover", function(event){
 			event.preventDefault();
 		});
-
 		_truck.addEventListener("drop", function(event){
 			event.preventDefault();
-			_this.tryAddPackage(itruck);
+			_this.tryAddPackage(truck);
 		});
 		parking.appendChild(_truck);
-	},
+		return _truck;
+	}
 }
 
 function 
@@ -350,12 +344,10 @@ vpkg.prototype = {
 		{
 			let row = document.createElement('div');
 			row.className = 'prow';
-			row.id = y;
 			for(let x = 0; x < 2; x++)
 			{
 				let cell = document.createElement('div');
 				cell.className = 'pcol';
-				cell.id = x;
 				if(map[x][y] == 1)
 				cell.style.backgroundColor = Packages[pkg.type];
 				else 
@@ -383,7 +375,7 @@ vhall.prototype = {
 
 		Array.from(document.getElementsByClassName('truck'))
 			.forEach(truck => { truck.remove(); });
-		hall.trucks.forEach(truck => new vtruck(truck, hall));
+		hall.trucks.forEach(truck => new vtruck(truck));
 	},
 
 	update: function(obj){
@@ -405,134 +397,128 @@ gui.prototype =
 		elemDiv.innerHTML = hall;
 		document.body.appendChild(elemDiv);
 	},
-	update: function(eventType, mesg)
-	{
-		console.log(eventType, mesg);				
-	},
 
 	init: function(obj)
 	{
-	this.packr = getElement('#root')
-	this.title = createElement('h3')
-	this.title.textContent = 'PACKRR'
-	this.hallInfo = createElement('h4')
-	this.hallInfo.className = "hallinfo";
-	this.hallInfo.textContent = "Hall: 1 | Weather: " + obj.getCurrentHall().weather;
-	//this.addTruckBtn = createElement('button')
-	//this.addTruckBtn.textContent = 'Add truck'
-	this.removeBeltBtn = createElement('button')
-	this.removeBeltBtn.textContent = 'Remove Belt'
-	this.addBeltBtn= createElement('button')
-	this.addBeltBtn.textContent = 'Add belt'
-	this.switchHallsBtn = createElement('button')
-	this.switchHallsBtn.textContent = 'Switch halls'
-	
-	this.trucksDiv = createElement('div')
-	this.trucksDiv.id = 'parking'
-	this.beltsDiv = createElement('div')
-	this.beltsDiv.id = 'belts'
-	this.hallDiv = createElement('div', 'hall')
-	this.hallDiv.append(this.beltsDiv, this.trucksDiv);
+		this.stackr = getElement('#root')
+		this.title = createElement('h3')
+		this.title.textContent = 'STACKRRR'
+		this.hallInfo = createElement('h4')
+		this.hallInfo.className = "hallinfo";
+		this.hallInfo.textContent = "Hall: 1 | Weather: " + obj.getCurrentHall().weather;
+		this.removeBeltBtn = createElement('button')
+		this.removeBeltBtn.textContent = 'Remove Belt'
+		this.addBeltBtn= createElement('button')
+		this.addBeltBtn.textContent = 'Add belt'
+		this.switchHallsBtn = createElement('button')
+		this.switchHallsBtn.textContent = 'Switch halls'
+		
+		this.trucksDiv = createElement('div')
+		this.trucksDiv.id = 'parking'
+		this.beltsDiv = createElement('div')
+		this.beltsDiv.id = 'belts'
+		this.hallDiv = createElement('div', 'hall')
+		this.hallDiv.append(this.beltsDiv, this.trucksDiv);
 
-	this.truckForm = createElement("form", "truckform");
-	this.truckForm.id = "truckform";
-	this.lengthLabel = createElement("label");
-	this.lengthLabel.innerHTML = "Lenght: ";
-	this.lengthInput = createElement("input");
-	this.lengthInput.name = "tlength";
-	this.lengthInput.min = "1";
-	this.lengthInput.max = "5";
-	this.lengthInput.type = "number"
-	this.lengthInput.setAttribute("required", "");
-	this.heightLabel = createElement("label");
-	this.heightLabel.innerHTML = "Height: ";
-	this.heightInput = createElement("input");
-	this.heightInput.name = "theight";
-	this.heightInput.min = "1";
-	this.heightInput.max  = "3";
-	this.heightInput.type = "number"
-	this.heightInput.setAttribute("required", "");
-	this.delayLabel = createElement("label");
-	this.delayLabel.innerHTML = "Delay: ";
-	this.delayInput = createElement("input");
-	this.delayInput.name = "tdelay";
-	this.delayInput.min = "0";
-	this.delayInput.type = "number"
-	this.delayInput.setAttribute("required", "");
-	this.truckTypeLabel = createElement("label");
-	this.truckTypeLabel.innerHTML = "Type: ";
-	this.truckTypeInput = this.createDropDown(Object.keys(Packages)
-); 
-	this.truckTypeInput.name = "ttype";
-	this.truckTypeInput.setAttribute("required", "");
-	this.actionLabel = createElement("label");
-	this.actionLabel.innerHTML = "Action radius: ";
-	this.actionInput = createElement("input");
-	this.actionInput.name = "taction";
-	this.actionInput.min = "0";
-	this.actionInput.type = "number"
-	this.actionInput.setAttribute("required", "");
-	this.addTruckBtn = createElement("button"); 
-	this.addTruckBtn.value = "submit";
-	this.addTruckBtn.innerHTML = "Add truck";
-	this.truckForm.append(
-		this.lengthLabel,
-		this.lengthInput,
-		this.heightLabel,
-		this.heightInput,
-		this.delayLabel,
-		this.delayInput,
-		this.truckTypeLabel,
-		this.truckTypeInput,
-		this.actionLabel,
-		this.actionInput,
-		this.addTruckBtn,
-	);
+		this.truckForm = createElement("form", "truckform");
+		this.truckForm.id = "truckform";
+		this.lengthLabel = createElement("label");
+		this.lengthLabel.innerHTML = "Lenght: ";
+		this.lengthInput = createElement("input");
+		this.lengthInput.name = "tlength";
+		this.lengthInput.min = "1";
+		this.lengthInput.max = "5";
+		this.lengthInput.type = "number"
+		this.lengthInput.setAttribute("required", "");
+		this.heightLabel = createElement("label");
+		this.heightLabel.innerHTML = "Height: ";
+		this.heightInput = createElement("input");
+		this.heightInput.name = "theight";
+		this.heightInput.min = "1";
+		this.heightInput.max  = "3";
+		this.heightInput.type = "number"
+		this.heightInput.setAttribute("required", "");
+		this.delayLabel = createElement("label");
+		this.delayLabel.innerHTML = "Delay: ";
+		this.delayInput = createElement("input");
+		this.delayInput.name = "tdelay";
+		this.delayInput.min = "0";
+		this.delayInput.type = "number"
+		this.delayInput.setAttribute("required", "");
+		this.truckTypeLabel = createElement("label");
+		this.truckTypeLabel.innerHTML = "Type: ";
+		this.truckTypeInput = this.createDropDown(Object.keys(Packages));
+		this.truckTypeInput.name = "ttype";
+		this.truckTypeInput.setAttribute("required", "");
+		this.actionLabel = createElement("label");
+		this.actionLabel.innerHTML = "Action radius: ";
+		this.actionInput = createElement("input");
+		this.actionInput.name = "taction";
+		this.actionInput.min = "0";
+		this.actionInput.type = "number"
+		this.actionInput.setAttribute("required", "");
+		this.addTruckBtn = createElement("button"); 
+		this.addTruckBtn.value = "submit";
+		this.addTruckBtn.innerHTML = "Add truck";
+		this.truckForm.append(
+			this.lengthLabel,
+			this.lengthInput,
+			this.heightLabel,
+			this.heightInput,
+			this.delayLabel,
+			this.delayInput,
+			this.truckTypeLabel,
+			this.truckTypeInput,
+			this.actionLabel,
+			this.actionInput,
+			this.addTruckBtn,
+		);
 
-	this.weatherForm = createElement("form", "weatherForm");
-	this.weatherForm.id = "weatherform";
-	this.lanLabel = createElement("label");
-	this.lanLabel.innerHTML = "Latitude: ";
-	this.lanInput = createElement("input");
-	this.lanInput.name = "lat";
-	this.lanInput.min = "-90";
-	this.lanInput.max = "90";
-	this.lanInput.type = "number"
-	this.lanInput.setAttribute("required", "");
-	this.lonLabel = createElement("label");
-	this.lonLabel.innerHTML = "Longitude: ";
-	this.lonInput = createElement("input");
-	this.lonInput.name = "lon";
-	this.lonInput.min = "-180";
-	this.lonInput.max = "180";
-	this.lonInput.type = "number"
-	this.lonInput.setAttribute("required", "");
-	this.changeWeaterBtn = createElement("button"); 
-	this.changeWeaterBtn.value = "submit";
-	this.changeWeaterBtn.innerHTML = "Change location";
-	this.weatherForm.append(
-		this.lanLabel,
-		this.lanInput,
-		this.lonLabel,
-		this.lonInput,
-		this.changeWeaterBtn
-	);
+		this.weatherForm = createElement("form", "weatherForm");
+		this.weatherForm.id = "weatherform";
+		this.lanLabel = createElement("label");
+		this.lanLabel.innerHTML = "Latitude: ";
+		this.lanInput = createElement("input");
+		this.lanInput.name = "lat";
+		this.lanInput.min = "-90";
+		this.lanInput.max = "90";
+		this.lanInput.type = "number"
+		this.lanInput.setAttribute("required", "");
+		this.lonLabel = createElement("label");
+		this.lonLabel.innerHTML = "Longitude: ";
+		this.lonInput = createElement("input");
+		this.lonInput.name = "lon";
+		this.lonInput.min = "-180";
+		this.lonInput.max = "180";
+		this.lonInput.type = "number"
+		this.lonInput.setAttribute("required", "");
+		this.changeWeaterBtn = createElement("button"); 
+		this.changeWeaterBtn.value = "submit";
+		this.changeWeaterBtn.innerHTML = "Change location";
+		this.weatherForm.append(
+			this.lanLabel,
+			this.lanInput,
+			this.lonLabel,
+			this.lonInput,
+			this.changeWeaterBtn
+		);
 
-	this.packr.append(
-		this.title, 
-		this.hallInfo,
-		this.addBeltBtn, 
-		this.removeBeltBtn,
-		this.switchHallsBtn,
-		this.truckForm, 
-		this.weatherForm,
-		this.hallDiv
-	);
-	bindElement(this.switchHallsBtn, obj.switchHalls);
-	bindElement(this.addBeltBtn, obj.addBelt);
-	bindElement(this.removeBeltBtn, obj.removeBelt);
-	bindElement(this.addTruckBtn, obj.handleAddTruck);
-	bindElement(this.changeWeaterBtn, obj.handleChangeWeather);
+		this.stackr.append(
+			this.title, 
+			this.hallInfo,
+			this.addBeltBtn, 
+			this.removeBeltBtn,
+			this.switchHallsBtn,
+			this.truckForm, 
+			this.weatherForm,
+			this.hallDiv
+		);
+
+		bindElement(this.switchHallsBtn, obj.switchHalls);
+		bindElement(this.addBeltBtn, obj.addBelt);
+		bindElement(this.removeBeltBtn, obj.removeBelt);
+		bindElement(this.addTruckBtn, obj.handleAddTruck);
+		bindElement(this.changeWeaterBtn, obj.handleChangeWeather);
 	},
 	
 	update: function(obj){
@@ -556,10 +542,12 @@ gui.prototype =
 		    }
 		return dropdown;
 	},
+
 	getFormData: function(formId){
 		let form = getElement("#" + formId);
 		return new FormData(form);
 	},
+
 	validateTruckForm: function(formId){
 		let form = getElement("#" + formId);
 		for( let i = 0; i < 5; i++){
@@ -570,6 +558,7 @@ gui.prototype =
 		}
 		return true; 
 	},
+
 	validateWeatherForm: function(formId){
 		let form = getElement("#" + formId);
 		for( let i = 0; i < 2; i++){
