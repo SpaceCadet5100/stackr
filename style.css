@@ -1,0 +1,66 @@
+
+.col {
+	color: red;
+	width: 120px;
+	height: 60px;
+	display: inline-block;
+	background-color: black;
+}
+
+.row {
+	margin: 1px;
+	height: 60px 
+}
+
+.box {
+	background-color: orange;
+}
+
+.belt {
+	border-style: solid;
+	padding: 2px;
+	width: fit-content;
+	background-color: orange;
+}
+
+
+.pcol {
+
+	width: 30px;
+	height: 30px;
+}
+.prow {
+
+	display:inline-block;
+}
+
+
+.pbox {
+	background-color: black;
+
+}
+
+.package {
+	margin:0;
+	padding: 0;
+}
+
+
+.hall {
+	display: flex;
+}
+
+.tcol {
+	width: 120px;
+	height: 60px;
+	display: inline-block;
+}
+
+.trow {
+	margin: 1px;
+	height: 60px 
+}
+
+.tinfo {
+	color: white;
+}
